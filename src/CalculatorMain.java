@@ -3,12 +3,13 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-public class CalculatorMain implements ActionListener{
+public class CalculatorMain implements ActionListener,TextListener{
 
 	public JFrame frame;
 	public JPanel tjp,vjp,ijp,cjp;
 	public Button numb[],cb[];
 	public TextArea ta;
+	public Data data;
 	GridBagLayout gb4tjp;
 	GridBagConstraints gbc;
 	public CalculatorMain(){
@@ -18,18 +19,18 @@ public class CalculatorMain implements ActionListener{
 		vjp= new JPanel();
 		ijp= new JPanel();
 		cjp= new JPanel();
-		
+		data = new Data();
 		c.add(tjp);
 		gb4tjp=new GridBagLayout();
 		gbc = new GridBagConstraints();
 		tjp.setLayout(gb4tjp);
 		tjp.setBackground(Color.WHITE);
-		gbc.fill=GridBagConstraints.HORIZONTAL;
-		addComponent(vjp,0,0,20,2);
-		addComponent(ijp,3,0,12,12);
-		addComponent(cjp,3,12,8,12);
+		gbc.fill=GridBagConstraints.ABOVE_BASELINE;
+		addComponent(vjp,0,0,10,3);
+		addComponent(ijp,3,0,5,1);
+		addComponent(cjp,3,5,4,1);
 		//—’…´
-		vjp.setBackground(Color.blue);
+		vjp.setBackground(Color.gray);
 		ijp.setBackground(Color.YELLOW);
 		cjp.setBackground(Color.green);
 		
@@ -54,6 +55,7 @@ public class CalculatorMain implements ActionListener{
 		
 		//œ‘ æ±‡º≠++++++++++++++
 		ta = new TextArea(1,10);
+		ta.addTextListener(this);
 		vjp.add(ta);
 		
 		//--------------------
@@ -103,14 +105,49 @@ public class CalculatorMain implements ActionListener{
 		// TODO Auto-generated method stub
 		for(int i=0;i<12;i++){
 			if(e.getSource()==numb[i]){
-				System.out.println(i);
+				//System.out.println(i);
 				if(i==10){               //"."
-					
+					ta.insert(".", ta.getCaretPosition());
 				}
-				if(i==11){               //"CL"
-					
+				else if(i==11){               //"CL"
+					ta.setText("");
+				}
+				else{
+					ta.insert(String.valueOf(i), ta.getCaretPosition());
 				}
 			}
 		}
+		if(e.getSource()==cb[0]){//+
+			ta.insert("+", ta.getCaretPosition());
+		}
+		if(e.getSource()==cb[1]){//-
+			ta.insert("-", ta.getCaretPosition());
+		}
+		if(e.getSource()==cb[2]){// *
+			ta.insert("*", ta.getCaretPosition());
+		}
+		if(e.getSource()==cb[3]){// /
+			ta.insert("/", ta.getCaretPosition());
+		}
+		if(e.getSource()==cb[4]){// (
+			ta.insert("(", ta.getCaretPosition());
+		}
+		if(e.getSource()==cb[5]){// )
+			ta.insert(")", ta.getCaretPosition());
+		}
+		if(e.getSource()==cb[6]){// CE
+			String str=ta.getText();
+			if(str.length()>0){
+			str = str.substring(0,str.length()-1); 
+			ta.setText(str);
+			}
+		}
+		if(e.getSource()==cb[7]){// =
+			data.str=ta.getText();
+			ta.setText(String.valueOf(data.getresult()));
+		}
+	}
+	public void textValueChanged(TextEvent e) {
+		
 	}
 }
